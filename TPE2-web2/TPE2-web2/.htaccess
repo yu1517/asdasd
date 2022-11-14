@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+
+
+    RewriteRule \.(?:css|js|jpe?g|gif|png)$ - [L]
+    RewriteRule ^api/(.*)$ router-api.php?resource=$1 [QSA,L,END] #el end lo que hace es que no ejecute la siguiente linea
+    #RewriteRule ^(.*)$ router.php?action=$1 [QSA,L]
+</IfModule>
