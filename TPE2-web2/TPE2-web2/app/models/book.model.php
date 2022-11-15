@@ -35,12 +35,19 @@ class BookModel
         return $books;
     }
 
-    public function order($sort, $orderBy){
+    function order($sort, $orderBy){
         $query = $this->db->prepare("SELECT books.id, books.id_author, books.title, books.genre, books.imagen, authors.name FROM books INNER JOIN authors ON books.id_author = authors.id_author ORDER BY $sort $orderBy");
         $query->execute();
         //3. Obtengo la respuesta con un fetchAll(porque)
         $orderedBooks = $query->fetchAll(PDO::FETCH_OBJ); // devuelve un arreglo de objetos
         return $orderedBooks;
+    }
+    
+    function getBooksByGenre($genre){
+        $this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+        $query = $this->db->prepare("SELECT * FROM books  WHERE genre IN ? ");
+        $query->execute(["%$genre%"]);
+        return $query->fetchAll(PDO::FETCH_OBJ); 
     }
 
     //Inserta una tarea en la base de datos.

@@ -35,8 +35,8 @@ class ApiBookController
             else if (!isset($_GET['orderBy']) && isset($_GET['sort']) && in_array($_GET['sort'], $sortWL)) {
             $sort = $_GET['sort'];
             $orderBy = "ASC";
-            $reviews = $this->model->order($sort, $orderBy);
-            $this->view->response($reviews, 200);
+            $books = $this->model->order($sort, $orderBy);
+            $this->view->response($books, 200);
             } 
         }
         //Paginacion
@@ -55,8 +55,8 @@ class ApiBookController
                         $start = 0;
                     }
                     $from = ((int)$start - 1) * (int)$limit;
-                    $reviews = $this->model->getAllPages($from, $limit);
-                    $this->view->response($reviews, 200);
+                    $books = $this->model->getAllPages($from, $limit);
+                    $this->view->response($books, 200);
                 }
             }
         } else if (!isset($_GET['limit']) && isset($_GET['start'])) {
@@ -67,13 +67,23 @@ class ApiBookController
             }
             $limit = 4;
             $from = ((int)$start - 1) * (int)$limit;
-            $reviews = $this->model->getAllPages($from, $limit);
-            $this->view->response($reviews, 200);
+            $books = $this->model->getAllPages($from, $limit);
+            $this->view->response($books, 200);
         } else {
-            $reviews = $this->model->getAllBooks();
-            $this->view->response($reviews, 200);
+            $books = $this->model->getAllBooks();
+            $this->view->response($books, 200);
         }
+
+        //filtro por genero
+        if (isset($_GET['genre']) && count($_GET) ==2){ //count controla que reciba solo dos parametros
+            $genre = $_GET ['$genre'];
+            $books = $this->model->getBooksByGenre($genre);
+            if (count($books) > 0) {
+                $this->view->response($books, 200);
+            }
+        } 
     }
+    
 
     public function getBook($params = null)
     {
